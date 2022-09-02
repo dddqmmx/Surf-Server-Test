@@ -1,5 +1,9 @@
 package com.dddqmmx.surf.socket.udp;
 
+import com.dddqmmx.surf.socket.connect.ConnectList;
+import com.dddqmmx.surf.util.RandomCharacters;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -27,7 +31,23 @@ public class UDPServerThread extends Thread {
     //具体地处理逻辑
     @Override
     public void run() {
-
+        String host = inetAddress.getHostAddress();
+        System.out.println("UDP : "+info);
+        JSONObject jsonObject = new JSONObject(info);
+        //获取客户端提交json的命令
+        String command = jsonObject.getString("command");
+        if (command.equals("setIpPort")){
+            int setPort = jsonObject.getInt("port");
+            String session = RandomCharacters.random(50);
+            while (ConnectList.hasSession(host,session)) {
+                session = RandomCharacters.random(50);
+            }
+            ConnectList.setPost(host,session,setPort);
+            JSONObject returnJson = new JSONObject();
+            returnJson.put("command","setSession");
+            returnJson.put("session",session);
+            send(returnJson.toString());
+        }
     }
 
     //发送消息
@@ -40,7 +60,7 @@ public class UDPServerThread extends Thread {
             return false;
         }
         //debug用的
-        System.out.println(new String(data));
+        System.out.println("UDP : " + new String(data));
 
         //发送回去的消息包
         DatagramPacket datagramPacket =  new DatagramPacket(data, data.length, inetAddress,port);

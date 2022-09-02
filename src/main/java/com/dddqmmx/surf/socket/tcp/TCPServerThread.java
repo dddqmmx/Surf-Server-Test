@@ -4,14 +4,11 @@ import com.dddqmmx.surf.socket.connect.Connect;
 import com.dddqmmx.surf.socket.connect.ConnectList;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.Socket;
 
 public class TCPServerThread extends Thread{
     private final Socket socket;
-
     public TCPServerThread(Socket socket) {
         this.socket = socket;
     }
@@ -29,7 +26,7 @@ public class TCPServerThread extends Thread{
             String line;
             while ((line = br.readLine())!= null){
                 //消息处理
-                System.out.println(line);
+                System.out.println("TCP : "+line);
 
                 JSONObject jsonObject = new JSONObject(line);
                 //获取客户端提交json的命令
@@ -43,9 +40,13 @@ public class TCPServerThread extends Thread{
 
                     String system = jsonObject.getString("system");
                     if (system.equals("android")){
-                        Connect connect = new Connect();
-                        connect.setIp(ip);
-                        ConnectList.connectList.add(connect);
+                        ConnectList.addHost(ip);
+                        System.out.println(system + " : " + ip);
+                        JSONObject comeBackJson = new JSONObject();
+                        comeBackJson.put("connect","true");
+                        send(comeBackJson);
+                    } else {
+
                     }
                 }
             }
@@ -56,4 +57,18 @@ public class TCPServerThread extends Thread{
         }
     }
 
+    private void send(String json){
+        System.out.println("TCPSend : " + json);
+        try {
+            OutputStream os = socket.getOutputStream();
+            PrintStream ps = new PrintStream(os);
+            ps.println(json);
+            ps.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private void send(Object object){
+        send(object.toString());
+    }
 }

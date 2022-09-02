@@ -1,13 +1,13 @@
 package com.dddqmmx.surf.socket.connect;
 
 public class Connect {
-    private String ip;
+    int port;
 
-    public String getIp() {
-        return ip;
+    public int getPort() {
+        return port;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void setPort(int port) {
+        this.port = port;
     }
 }
