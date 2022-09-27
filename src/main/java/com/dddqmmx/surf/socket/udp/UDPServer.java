@@ -66,8 +66,8 @@ public class UDPServer extends Thread{
     public static boolean send(byte[] data){
         DatagramSocket socket = null;
         try {
-            InetAddress inetAddress = InetAddress.getByName("192.168.117.86");
-            DatagramPacket packet = new DatagramPacket(data, data.length,inetAddress,2077);
+            InetAddress inetAddress = InetAddress.getByName("127.0.0.1");
+            DatagramPacket packet = new DatagramPacket(data, data.length,inetAddress,11451);
             socket = new DatagramSocket();
             socket.send(packet);
 

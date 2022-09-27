@@ -33,7 +33,7 @@ public class UDPServerThread extends Thread {
     public void run() {
         String host = inetAddress.getHostAddress();
         System.out.println("UDP : "+info);
-        JSONObject jsonObject = new JSONObject(info);
+        /*JSONObject jsonObject = new JSONObject(info);
         //获取客户端提交json的命令
         String command = jsonObject.getString("command");
         if (command.equals("setIpPort")){
@@ -47,7 +47,7 @@ public class UDPServerThread extends Thread {
             returnJson.put("command","setSession");
             returnJson.put("session",session);
             send(returnJson.toString());
-        }
+        }*/
     }
 
     //发送消息
@@ -60,7 +60,7 @@ public class UDPServerThread extends Thread {
             return false;
         }
         //debug用的
-        System.out.println("UDP : " + new String(data));
+        System.out.println("UDPSend : " + new String(data));
 
         //发送回去的消息包
         DatagramPacket datagramPacket =  new DatagramPacket(data, data.length, inetAddress,port);

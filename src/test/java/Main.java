@@ -3,31 +3,36 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-            Socket socket = null;
+        Scanner scanner = new Scanner(System.in);
+        while (true){
+            System.out.println("client host : ");
+            String ip = scanner.next();
+            System.out.println("client port : ");
+            int port = scanner.nextInt();
+            DatagramSocket socket = null;
             try {
-                socket = new Socket("127.0.0.1", 2042);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                String msg = scanner.next();
+                InetAddress inetAddress = InetAddress.getByName(ip);
+                byte[] data = msg.getBytes(StandardCharsets.UTF_8);
+                DatagramPacket packet = new DatagramPacket(data, data.length,inetAddress,port);
+                socket = new DatagramSocket();
+                socket.send(packet);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }finally {
+                if (socket != null) {
+                    socket.close();
+                }
             }
-            //从socket通信管道中得到一个字节输入流
-            OutputStream os = null;
-            try {
-                os = socket.getOutputStream();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            //包装为高级打印流
-            PrintStream ps = new PrintStream(os);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("command","connect");
-            jsonObject.put("system","android");
-            ps.println(jsonObject);
-            ps.flush();
-            socket.close();
-
+        }
     }
 }

@@ -2,6 +2,8 @@ package com.dddqmmx.surf.socket.tcp;
 
 import com.dddqmmx.surf.socket.connect.Connect;
 import com.dddqmmx.surf.socket.connect.ConnectList;
+import com.dddqmmx.surf.socket.connect.SocketSession;
+import com.dddqmmx.surf.util.RandomCharacters;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -40,8 +42,13 @@ public class TCPServerThread extends Thread{
 
                     String system = jsonObject.getString("system");
                     if (system.equals("android")){
-                        ConnectList.addHost(ip);
-                        System.out.println(system + " : " + ip);
+                        /*随机生成32位数的sessionId*/
+                        String sessionId = RandomCharacters.random(32);
+                        while (ConnectList.hasSessionId(sessionId)) {
+                            sessionId = RandomCharacters.random(32);
+                        }
+                        SocketSession socketSession = new SocketSession();
+                        ConnectList.setSocketSession(sessionId,socketSession);
                         JSONObject comeBackJson = new JSONObject();
                         comeBackJson.put("connect","true");
                         send(comeBackJson);
