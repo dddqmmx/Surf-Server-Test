@@ -49,34 +49,4 @@ public class UDPServerThread extends Thread {
             send(returnJson.toString());
         }*/
     }
-
-    //发送消息
-    public boolean send(String data){
-        return send(data.getBytes(StandardCharsets.UTF_8));
-    }
-    public boolean send(byte[] data) {
-        //不发为空的消息
-        if (data == null){
-            return false;
-        }
-        //debug用的
-        System.out.println("UDPSend : " + new String(data));
-
-        //发送回去的消息包
-        DatagramPacket datagramPacket =  new DatagramPacket(data, data.length, inetAddress,port);
-
-        //发送到客户端的socket
-        DatagramSocket socket = null;
-        try {
-            socket = new DatagramSocket();
-            socket.send(datagramPacket);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }finally {
-            //最终关闭流
-            socket.close();
-        }
-        return true;
-    }
 }

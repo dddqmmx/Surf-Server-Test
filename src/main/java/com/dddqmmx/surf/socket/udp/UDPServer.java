@@ -55,34 +55,4 @@ public class UDPServer extends Thread{
         }
     }
 
-    public static void send(Object object){
-        send(object.toString());
-    }
-
-    public static void send(String string){
-        send(string.getBytes(StandardCharsets.UTF_8));
-    }
-
-    public static boolean send(byte[] data){
-        DatagramSocket socket = null;
-        try {
-            InetAddress inetAddress = InetAddress.getByName("127.0.0.1");
-            DatagramPacket packet = new DatagramPacket(data, data.length,inetAddress,11451);
-            socket = new DatagramSocket();
-            socket.send(packet);
-
-            byte[] data2 = new byte[1024];
-            DatagramPacket packet2 = new DatagramPacket(data2, data2.length);
-            socket.receive(packet2);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally {
-            if (socket != null) {
-                socket.close();
-            }
-        }
-        return false;
-    }
-
 }

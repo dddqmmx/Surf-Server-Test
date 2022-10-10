@@ -49,8 +49,12 @@ public class TCPServerThread extends Thread{
                         }
                         SocketSession socketSession = new SocketSession();
                         ConnectList.setSocketSession(sessionId,socketSession);
+                        ConnectList.setThread(sessionId,this);
                         JSONObject comeBackJson = new JSONObject();
+                        comeBackJson.put("command",command);
                         comeBackJson.put("connect","true");
+                        comeBackJson.put("sessionId",sessionId);
+                        System.out.println(sessionId);
                         send(comeBackJson);
                     } else {
 
@@ -64,7 +68,7 @@ public class TCPServerThread extends Thread{
         }
     }
 
-    private void send(String json){
+    public void send(String json){
         System.out.println("TCPSend : " + json);
         try {
             OutputStream os = socket.getOutputStream();
@@ -75,7 +79,7 @@ public class TCPServerThread extends Thread{
             throw new RuntimeException(e);
         }
     }
-    private void send(Object object){
+    public void send(Object object){
         send(object.toString());
     }
 }

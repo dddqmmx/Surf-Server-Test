@@ -22,8 +22,12 @@ public class ConnectList {
         connectMap.put(sessionId, connect);
     }
 
-    public static void setThreadMap(String sessionId, Thread thread) {
+    public static void setThread(String sessionId, Thread thread) {
         threadMap.put(sessionId,thread);
+    }
+
+    public static Thread getThread(String sessionId){
+        return threadMap.get(sessionId);
     }
 
 }
